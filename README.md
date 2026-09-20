@@ -338,7 +338,7 @@ AI agents should never make irreversible state modifications without explicit us
 
 Watch the project walk-through and live demonstration:
 
-- [Demo Video](PASTE_YOUTUBE_LINK_HERE)
+- [Demo Video](https://youtu.be/FXXYuxEAF8I)
 
 ---
 
