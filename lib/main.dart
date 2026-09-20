@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'core/constants/app_theme.dart';
 import 'providers/task_provider.dart';
 import 'screens/home_screen.dart';
+import 'services/ai_agent_api_service.dart';
+import 'services/ai_reminder_service.dart';
 import 'services/notification_service.dart';
 
 void main() async {
@@ -33,7 +35,11 @@ class DontMissApp extends StatelessWidget {
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,
-        home: const HomeScreen(),
+        home: const HomeScreen(
+          aiService: StrandsAgentApiService(
+            fallbackService: LocalAiReminderService(),
+          ),
+        ),
       ),
     );
   }
