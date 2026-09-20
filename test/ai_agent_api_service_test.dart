@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dont_miss/models/priority.dart';
 import 'package:dont_miss/models/recurrence.dart';
@@ -189,7 +190,7 @@ void main() {
 
       const defaultService = StrandsAgentApiService();
       expect(defaultService.effectiveBaseUrl, StrandsAgentApiService.defaultBaseUrl);
-      if (Platform.isAndroid) {
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
         expect(StrandsAgentApiService.defaultBaseUrl, 'http://10.0.2.2:8000');
       } else {
         expect(StrandsAgentApiService.defaultBaseUrl, 'http://127.0.0.1:8000');
