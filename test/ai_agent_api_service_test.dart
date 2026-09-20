@@ -185,6 +185,8 @@ void main() {
       const custom = StrandsAgentApiService(baseUrl: 'http://custom-host:9000');
       expect(custom.effectiveBaseUrl, 'http://custom-host:9000');
 
+      expect(StrandsAgentApiService.environmentBaseUrl, isEmpty);
+
       const defaultService = StrandsAgentApiService();
       expect(defaultService.effectiveBaseUrl, StrandsAgentApiService.defaultBaseUrl);
       if (Platform.isAndroid) {

@@ -21,8 +21,16 @@ class StrandsAgentApiService implements AiReminderService {
     this.clientFactory,
   });
 
-  /// Default API base URL: 10.0.2.2:8000 for Android emulator, 127.0.0.1:8000 otherwise.
+  /// Base URL configured at build/run time via `--dart-define=AGENT_BASE_URL=...`.
+  static const String environmentBaseUrl =
+      String.fromEnvironment('AGENT_BASE_URL', defaultValue: '');
+
+  /// Default API base URL: resolves from --dart-define=AGENT_BASE_URL if supplied,
+  /// otherwise 10.0.2.2:8000 for Android emulator and 127.0.0.1:8000 for other platforms.
   static String get defaultBaseUrl {
+    if (environmentBaseUrl.isNotEmpty) {
+      return environmentBaseUrl;
+    }
     if (!kIsWeb && Platform.isAndroid) {
       return 'http://10.0.2.2:8000';
     }
