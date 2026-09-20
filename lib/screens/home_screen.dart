@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../core/constants/app_colors.dart';
 import '../models/task.dart';
 import '../providers/task_provider.dart';
+import '../services/ai_reminder_service.dart';
 import '../widgets/ai_confirmation_sheet.dart';
 import '../widgets/empty_state_view.dart';
 import '../widgets/task_card.dart';
@@ -11,7 +12,12 @@ import 'add_edit_task_screen.dart';
 
 /// The main dashboard view displaying task statistics, filters, search, and list.
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final AiReminderService? aiService;
+
+  const HomeScreen({
+    super.key,
+    this.aiService,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -353,6 +359,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _openAiAssistant(BuildContext context) {
-    AiConfirmationSheet.show(context);
+    AiConfirmationSheet.show(
+      context,
+      aiService: widget.aiService,
+    );
   }
 }
