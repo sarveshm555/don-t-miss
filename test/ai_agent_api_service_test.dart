@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dont_miss/models/priority.dart';
 import 'package:dont_miss/models/recurrence.dart';
+import 'package:dont_miss/services/agent_http_transport.dart';
 import 'package:dont_miss/services/ai_agent_api_service.dart';
 import 'package:dont_miss/services/ai_reminder_service.dart';
 
@@ -196,5 +197,57 @@ void main() {
         expect(StrandsAgentApiService.defaultBaseUrl, 'http://127.0.0.1:8000');
       }
     });
+
+    test('Custom AgentHttpTransport can be injected and executed', () async {
+      final mockTransport = _MockAgentHttpTransport(
+        statusCode: 200,
+        body: jsonEncode({
+          'success': true,
+          'proposal': {
+            'status': 'PROPOSED',
+            'action': 'create_reminder',
+            'requires_confirmation': true,
+            'raw_prompt': 'Buy milk',
+            'draft': {
+              'title': 'Buy milk',
+              'description': '',
+              'dueDate': '2026-09-21',
+              'dueHour': 10,
+              'dueMinute': 0,
+              'priority': 'medium',
+              'recurrence': 'none',
+            },
+          },
+        }),
+      );
+
+      final service = StrandsAgentApiService(
+        transport: mockTransport,
+      );
+
+      final draft = await service.parsePrompt('Buy milk', referenceTime: fixedTime);
+      expect(draft.title, 'Buy milk');
+      expect(mockTransport.called, isTrue);
+    });
   });
 }
+
+class _MockAgentHttpTransport implements AgentHttpTransport {
+  final int statusCode;
+  final String body;
+  bool called = false;
+
+  _MockAgentHttpTransport({required this.statusCode, required this.body});
+
+  @override
+  Future<AgentHttpResponse> postJson({
+    required Uri uri,
+    required Map<String, dynamic> payload,
+    required Duration timeout,
+    dynamic clientFactory,
+  }) async {
+    called = true;
+    return AgentHttpResponse(statusCode: statusCode, body: body);
+  }
+}
+
